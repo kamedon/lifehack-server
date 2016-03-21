@@ -46,10 +46,17 @@ class TaskApiController extends RestController
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($task);
             $manager->flush();
+
+            $task->setRank($task->getId());
+            $manager->persist($task);
+            $manager->flush();
+
+
             return [
                 "task" => [
                     "id" => $task->getId(),
                     "body" => $task->getBody(),
+                    "rank" => $task->getRank(),
                     "state" => $task->getState(),
                     "createdAt" => $task->getCreatedAt(),
                 ],
@@ -80,10 +87,11 @@ class TaskApiController extends RestController
         $user = $this->authUser();
         $repository = $this->getDoctrine()->getRepository("AppBundle:Task");
         $query = $repository->createQueryBuilder('t')
-            ->select(["t.id", "t.body", "t.state", "t.createdAt", "t.updatedAt"])
+            ->select(["t.id", "t.body", "t.state", "t.rank", "t.createdAt", "t.updatedAt"])
             ->where('t.user = :user')
             ->setParameter('user', $user)
-            ->orderBy('t.updatedAt', 'DESC')
+            ->addOrderBy('t.rank', 'DESC')
+            ->addOrderBy('t.createdAt', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit)
             ->getQuery();
@@ -115,10 +123,11 @@ class TaskApiController extends RestController
         $user = $this->authUser();
         $repository = $this->getDoctrine()->getRepository("AppBundle:Task");
         $builder = $repository->createQueryBuilder('t')
-            ->select(["t.id", "t.body", "t.state", "t.createdAt", "t.updatedAt"])
+            ->select(["t.id", "t.body", "t.state","t.rank", "t.createdAt", "t.updatedAt"])
             ->where('t.user = :user')
             ->setParameter('user', $user)
-            ->orderBy('t.createdAt', 'DESC')
+            ->addOrderBy('t.rank', 'DESC')
+            ->addOrderBy('t.createdAt', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit);
 
@@ -193,6 +202,7 @@ class TaskApiController extends RestController
                     "id" => $task->getId(),
                     "body" => $task->getBody(),
                     "state" => $task->getState(),
+                    "rank" => $task->getRank(),
                     "createdAt" => $task->getCreatedAt(),
                     "updatedAt" => $task->getUpdatedAt(),
                 ],

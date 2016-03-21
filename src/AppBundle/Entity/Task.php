@@ -45,7 +45,7 @@ class Task
      *
      * @ORM\Column(name="rank", type="integer")
      */
-    private $rank;
+    private $rank = 0;
 
     /**
      * @var string
