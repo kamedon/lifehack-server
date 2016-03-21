@@ -41,6 +41,13 @@ class Task
     private $body;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="rank", type="integer")
+     */
+    private $rank;
+
+    /**
      * @var string
      * @Assert\NotBlank()
      * @Assert\Choice(choices = {"untreated","process", "complete"}, message = "Choose a valid state.")
@@ -194,5 +201,29 @@ class Task
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set rank
+     *
+     * @param integer $rank
+     *
+     * @return Task
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+
+        return $this;
+    }
+
+    /**
+     * Get rank
+     *
+     * @return integer
+     */
+    public function getRank()
+    {
+        return $this->rank;
     }
 }
