@@ -42,10 +42,14 @@ class Task
 
     /**
      * @var int
+     * @Assert\NotBlank()
+     * @Assert\GreaterThanOrEqual(
+     *     value = 1
+     * )
      *
      * @ORM\Column(name="rank", type="integer")
      */
-    private $rank = 0;
+    private $rank = 1;
 
     /**
      * @var string
